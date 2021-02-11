@@ -12,13 +12,13 @@ export class UserController {
     }
 
     @Get("/:id")
-    findOne(@Param("id") id){
+    findOne(@Param("id") id:string){
         return this.userService.findOne(id);
     }
 
     @Post()
-    create(@Body() createUserDto: CreateUserDto){
-        return this.userService.create(createUserDto)
+    async create(@Body() createUserDto: CreateUserDto){
+        return await this.userService.create(createUserDto)
     }
 
     @Patch('/:id')

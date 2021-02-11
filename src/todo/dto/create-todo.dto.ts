@@ -2,7 +2,7 @@ import { IsString, Length, IsArray, IsBoolean, IsDateString, IsOptional } from "
 
 export class CreateTodoDto {
     @IsString()
-    @Length(1, 30)
+    @Length(1, 50)
     readonly creator: string;
 
     @IsDateString()

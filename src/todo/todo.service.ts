@@ -13,12 +13,17 @@ export class TodoService {
     ){}
 
     async findAll(query){
-        const { limit , offset } = query;
+        const { limit , offset, order = "ASC" } = query;
         const start = (+offset) * (+limit);
 
         const [data, length] = await this.todoRepository.findAndCount({ 
+            order: {
+                // creator: "DESC",
+                id: order,
+            },
             skip: start,
-            take: +limit
+            take: +limit,
+            cache: true
         });
 
         return { data, length, limit: +limit, offset: +offset, skip: start }
@@ -27,6 +32,9 @@ export class TodoService {
 
     async findOne(id:string){
         const todo = await this.todoRepository.findOne(id);
+
+        console.log('todoRepository findOne =>', id);
+
         if(!todo){
             throw new NotFoundException(`todo ${id} not found`)
         }
