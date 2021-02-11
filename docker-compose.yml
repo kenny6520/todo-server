@@ -1,0 +1,32 @@
+version: "3"
+services:
+  db:
+    image:  postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: livs.john123
+      PGDATA: /var/lib/postgres/data
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4:4.18
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: lishiwen@wclound.cn
+      PGADMIN_DEFAULT_PASSWORD: livs.john123
+      PGADMIN_LISTEN_PORT: 90
+    ports:
+      - "90:90"
+    volumes: 
+      - pgadmin-data:/var/lib/pgadmin
+    links:
+      - "db:pgsql-server"
+
+volumes:
+  db-data: {}
+  pgadmin-data: {}
