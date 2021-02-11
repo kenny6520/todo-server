@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Connection } from 'typeorm';
- 
+
 import { UserModule } from './user/user.module';
 import { TodoModule } from './todo/todo.module';
 import { AppController } from './app.controller';
@@ -24,11 +24,11 @@ import { AppService } from './app.service';
     UserModule,
     TodoModule,
     // noConfigFile,
-    TypeOrmModule.forRoot()
+    TypeOrmModule.forRoot(),
   ],
   controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {
-  constructor(private readonly connection: Connection){}
+  constructor(private readonly connection: Connection) {}
 }

@@ -7,55 +7,58 @@ import { Todo } from './entities/todo.entity';
 
 @Injectable()
 export class TodoService {
-    constructor(
-        @InjectRepository(Todo)
-        private readonly todoRepository: Repository<Todo>
-    ){}
+  constructor(
+    @InjectRepository(Todo)
+    private readonly todoRepository: Repository<Todo>,
+  ) {}
 
-    async findAll(query){
-        const { limit , offset, order = "ASC" } = query;
-        const start = (+offset) * (+limit);
+  async findAll(query) {
+    const { limit, offset, order = 'ASC' } = query;
+    const start = +offset * +limit;
 
-        const [data, length] = await this.todoRepository.findAndCount({ 
-            order: {
-                // creator: "DESC",
-                id: order,
-            },
-            skip: start,
-            take: +limit,
-            cache: true
-        });
+    const [data, length] = await this.todoRepository.findAndCount({
+      order: {
+        // creator: "DESC",
+        id: order,
+      },
+      skip: start,
+      take: +limit,
+      cache: true,
+    });
 
-        return { data, length, limit: +limit, offset: +offset, skip: start }
-        // return this.todoRepository.find();
+    return { data, length, limit: +limit, offset: +offset, skip: start };
+    // return this.todoRepository.find();
+  }
+
+  async findOne(id: string) {
+    const todo = await this.todoRepository.findOne(id);
+
+    console.log('todoRepository findOne =>', id);
+
+    if (!todo) {
+      throw new NotFoundException(`todo ${id} not found`);
     }
+    return todo;
+  }
 
-    async findOne(id:string){
-        const todo = await this.todoRepository.findOne(id);
+  create(createTodoDto: CreateTodoDto) {
+    const todo = this.todoRepository.create(createTodoDto);
+    return this.todoRepository.save(todo);
+  }
 
-        console.log('todoRepository findOne =>', id);
-
-        if(!todo){
-            throw new NotFoundException(`todo ${id} not found`)
-        }
-        return todo;
+  async update(id: string, updateTodoDto: UpdateTodoDto) {
+    const todo = await this.todoRepository.preload({
+      id: +id,
+      ...updateTodoDto,
+    });
+    if (!todo) {
+      throw new NotFoundException(`todo ${id} not found`);
     }
+    return this.todoRepository.save(todo);
+  }
 
-    create(createTodoDto: CreateTodoDto) {
-        const todo = this.todoRepository.create(createTodoDto);
-        return this.todoRepository.save(todo);
-    }
-
-    async update(id:string, updateTodoDto: UpdateTodoDto) {
-        const todo = await this.todoRepository.preload({ id: +id, ...updateTodoDto });
-        if (!todo) {
-            throw new NotFoundException(`todo ${id} not found`)
-        }
-        return this.todoRepository.save(todo);
-    }
-
-    async remove(id:string){
-        const todo = await this.findOne(id);
-        return this.todoRepository.remove(todo);
-    }
+  async remove(id: string) {
+    const todo = await this.findOne(id);
+    return this.todoRepository.remove(todo);
+  }
 }
