@@ -17,13 +17,17 @@ export class UserService {
   ) {}
 
   findAll() {
-    return this.userRepository.find();
+    return this.userRepository.find({
+      relations: ['roles']
+    });
   }
 
   findOne(id: string) {
     // TODO: try中的throw会被finally捕获到, 导致信息返回错误
     // try {
-    const user = this.userRepository.findOne(id);
+    const user = this.userRepository.findOne(id, {
+      relations: ["roles"] // 关联roles
+    });
     if (!user) {
       throw new NotFoundException(`User ${id} not found`);
     }
