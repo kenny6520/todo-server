@@ -10,6 +10,7 @@ import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { Roles } from './entities/roles.entity';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 
 @Injectable()
 export class UserService {
@@ -21,9 +22,15 @@ export class UserService {
     private readonly rolesRepository: Repository<Roles>
   ) {}
 
-  findAll() {
+  findAll(paginationQuery: PaginationQueryDto) {
+    const { limit, offset } = paginationQuery;
     return this.userRepository.find({
-      relations: ['roles']
+      relations: ['roles'],
+      skip: offset * offset,
+      take: limit,
+      order: {
+        id: "ASC"
+      }
     });
   }
 

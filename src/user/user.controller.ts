@@ -1,5 +1,7 @@
-import { Controller, Get, Param, Patch, Body, Post } from '@nestjs/common';
+import { Controller, Get, Param, Patch, Body, Post, Query } from '@nestjs/common';
+import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { UserService } from './user.service';
 
 @Controller('user')
@@ -7,8 +9,8 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
-  findAll() {
-    return this.userService.findAll();
+  findAll(@Query() paginationQuery: PaginationQueryDto) {
+    return this.userService.findAll(paginationQuery);
   }
 
   @Get('/:id')
@@ -22,5 +24,7 @@ export class UserController {
   }
 
   @Patch('/:id')
-  updateUser(@Body() body) {}
+  async updateUser(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    return await this.userService.update(id, updateUserDto)
+  }
 }
