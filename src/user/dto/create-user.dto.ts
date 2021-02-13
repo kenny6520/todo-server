@@ -11,7 +11,7 @@ import {
 export class CreateUserDto {
   @IsOptional()
   @IsString()
-  @Length(2, 10)
+  @Length(2, 50)
   readonly name?: string;
 
   @IsOptional()
@@ -44,6 +44,6 @@ export class CreateUserDto {
   readonly avatar?: string;
 
   @IsOptional()
-  @IsArray()
+  @IsString({ each: true })
   roles?: string[];
 }

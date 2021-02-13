@@ -32,6 +32,12 @@ export class User {
   avatar?: string;
 
   @JoinTable()
-  @ManyToMany(type => Roles, role => role.users)
-  roles?: string[];
+  @ManyToMany(
+    type => Roles,
+    role => role.users,
+    {
+      cascade: true, // 👈 or optionally just insert or update ['insert']
+    }
+  )
+  roles?: Roles[];
 }

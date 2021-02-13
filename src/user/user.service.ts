@@ -8,12 +8,17 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
+import { Roles } from './entities/roles.entity';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+
+    @InjectRepository(Roles)
+    private readonly rolesRepository: Repository<Roles>
   ) {}
 
   findAll() {
@@ -40,8 +45,30 @@ export class UserService {
     // }
   }
 
-  create(createUserDto: CreateUserDto) {
-    const user = this.userRepository.create(createUserDto);
+  async create(createUserDto: CreateUserDto) {
+    const roles = await Promise.all(
+      createUserDto.roles.map(role => this.preloadRolesByName(role)),
+    )
+    const user = this.userRepository.create({ ...createUserDto, roles });
     return this.userRepository.save(user);
+  }
+
+
+  private async preloadRolesByName(name: string): Promise<Roles> {
+    const existingRoles = await this.rolesRepository.findOne({ name });
+    if(existingRoles) return existingRoles;
+    return this.rolesRepository.create({ name });
+  }
+
+
+  async update(id:string, updateUserDto: UpdateUserDto){
+    const roles = updateUserDto.roles && (await Promise.all(
+        updateUserDto?.roles.map(role => this.preloadRolesByName(role)))
+    );
+    const user = await this.userRepository.preload({ id, ...updateUserDto, roles });
+    if(!user){
+      throw new NotFoundException(`user ${id} not found`);
+    }
+    return this.userRepository.create(user);
   }
 }
