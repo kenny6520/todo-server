@@ -1,9 +1,10 @@
-import { PrimaryGeneratedColumn, Column, Entity, PrimaryColumn } from 'typeorm';
+import { PrimaryGeneratedColumn, Column, Entity, PrimaryColumn, JoinTable, ManyToMany } from 'typeorm';
+import { Roles } from './roles.entity';
 
 @Entity()
 export class User {
   @PrimaryGeneratedColumn('uuid')
-  userId: string;
+  id: string;
 
   @Column({ nullable: true })
   name?: string;
@@ -30,6 +31,7 @@ export class User {
   })
   avatar?: string;
 
-  @Column('json', { nullable: true })
+  @JoinTable()
+  @ManyToMany(type => Roles, role => role.users)
   roles?: string[];
 }
