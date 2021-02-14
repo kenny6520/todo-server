@@ -1,9 +1,16 @@
-## run
+## Base operating environment
 
+Required operating environment
+- framework: nestjs
+- language: typescript
 - database: postgres
 - container: docker
 
-<br/>
+Install operating environment
+- docker https://docs.docker.com/get-docker/
+
+
+## Start the docker environment
 
 Start containers in detached / background mode
 - docker-compose up -d
@@ -17,8 +24,8 @@ View proxy port
 view port mapping
 - docker-compose ps
 
-找到使用卷
+Find use volume
 - docker volume ls
 
-删除使用卷
+Delete used volume
 -  docker volume rm pgdev_db-data pgdev_pgadmin-data
