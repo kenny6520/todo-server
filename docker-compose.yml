@@ -27,6 +27,14 @@ services:
     links:
       - "db:pgsql-server"
 
+  # db: 
+  #   image: mongo
+  #   restart: always 
+  #   ports:
+  #     - 27017:27017
+  #   environment:
+  #     MONGODB_DATABASE: nest-todo
+
 volumes:
   db-data: {}
   pgadmin-data: {}

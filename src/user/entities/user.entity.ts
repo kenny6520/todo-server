@@ -1,4 +1,11 @@
-import { PrimaryGeneratedColumn, Column, Entity, PrimaryColumn, JoinTable, ManyToMany } from 'typeorm';
+import {
+  PrimaryGeneratedColumn,
+  Column,
+  Entity,
+  PrimaryColumn,
+  JoinTable,
+  ManyToMany,
+} from 'typeorm';
 import { Roles } from './roles.entity';
 
 @Entity()
@@ -32,12 +39,8 @@ export class User {
   avatar?: string;
 
   @JoinTable()
-  @ManyToMany(
-    type => Roles,
-    role => role.users,
-    {
-      cascade: true, // 👈 or optionally just insert or update ['insert']
-    }
-  )
+  @ManyToMany((type) => Roles, (role) => role.users, {
+    cascade: true, // 👈 or optionally just insert or update ['insert']
+  })
   roles?: Roles[];
 }

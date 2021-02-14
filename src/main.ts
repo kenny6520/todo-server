@@ -7,7 +7,7 @@ async function bootstrap() {
 
   // app.setGlobalPrefix("/api");
 
-  app.enableCors()
+  app.enableCors();
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -15,13 +15,15 @@ async function bootstrap() {
       forbidNonWhitelisted: true,
       transform: true,
       transformOptions: {
-        enableImplicitConversion: true
-      }
+        enableImplicitConversion: true,
+      },
     }),
   );
 
-  await app.listen(3000, "127.0.0.1", function () {
-    Logger.log("listening on port 3000, Open in browser: http://127.0.0.1:3000")
+  await app.listen(3000, '127.0.0.1', function () {
+    Logger.log(
+      'listening on port 3000, Open in browser: http://127.0.0.1:3000',
+    );
   });
 }
 
